@@ -27,6 +27,7 @@ def get_client():
         return MONGOCLIENT
 
     MONGOCLIENT = MongoClient(host="localhost")
+    # MONGOCLIENT = MongoClient(host="10.10.4.4")
     return MONGOCLIENT
 
 
@@ -60,6 +61,7 @@ def get_collections(db=None):
 
     # Collections name
     twitter_streaming = db.twitter_streaming
+    twitter_sentiments = db.twitter_sentiments
 
     # collections (and databases) in MongoDB is that they are created lazily,
     # - none of the above commands have actually performed any operations on the MongoDB server.
@@ -67,6 +69,7 @@ def get_collections(db=None):
 
     collections = {
         'twitter_streaming': twitter_streaming,
+        "twitter_sentiments": twitter_sentiments
     }
     return collections
 

@@ -3,3 +3,10 @@ tweepy
 
 # mongo
 pymongo
+
+# sentiment
+textblob
+
+# tasks
+celery
+redis

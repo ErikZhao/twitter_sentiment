@@ -37,7 +37,7 @@ class MyStreamListener(tweepy.StreamListener):
         if status.coordinates:
             if self.num_tweets < stream_tweets_limit:
                 id = collections['twitter_streaming'].insert_one(
-                        {"text": status.text, "coordinates": status.coordinates['coordinates']})
+                        {"text": status.text, "coordinates": status.coordinates['coordinates']}).inserted_id
                 self.ids.append(str(id))
                 self.num_tweets += 1
                 return True
@@ -52,7 +52,7 @@ class MyStreamListener(tweepy.StreamListener):
 
 def twitter_consumer():
     """
-
+    This function comsume tweets on limited amounts
     :return:
     """
     myStreamListener = MyStreamListener()
@@ -62,4 +62,7 @@ def twitter_consumer():
     return myStreamListener.ids
 
 
-print twitter_consumer()
+def tc_task(task):
+    ids = twitter_consumer()
+    for id in ids:
+        task.delay(str(id))
