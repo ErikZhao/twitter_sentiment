@@ -35,18 +35,20 @@ def sentiment_task(id=None, collections=None):
     if not id or not collections:
         return
 
-    # get sentiments and streaming collections from mongo
+    # get sentiments collection from mongo
     sentiments_collection = collections['twitter_sentiments']
-    streaming_collection = collections['twitter_streaming']
 
     # calculate polarity from tweets text and get coordinates from streaming collection
-    streaming_doc = streaming_collection.find_one({'_id': ObjectId(id)})
+    streaming_doc = sentiments_collection.find_one({'_id': ObjectId(id)})
     text = streaming_doc.get('text', '')
-    coordinates = streaming_doc.get('coordinates', [])
     polarity = analyze_sentiment(text)
 
     # insert polarity and coordinates into sentiment collection
-    sentiment_json = {"polarity": polarity, "coordinates": coordinates}
-    sentiments_collection.insert_one(sentiment_json)
+    sentiment_json = {"polarity": polarity}
+    update_doc = m.update_one_document(sentiments_collection, {'_id': ObjectId(id)}, sentiment_json)
+
+    return update_doc
+
+
 
 

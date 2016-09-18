@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from pymongo import MongoClient
+import pymongo
 
 __author__ = "linghanzhao"
 __created__ = "9/17/16"
@@ -60,17 +61,59 @@ def get_collections(db=None):
         return None
 
     # Collections name
-    twitter_streaming = db.twitter_streaming
+    # twitter_streaming = db.twitter_streaming
     twitter_sentiments = db.twitter_sentiments
 
-    # collections (and databases) in MongoDB is that they are created lazily,
-    # - none of the above commands have actually performed any operations on the MongoDB server.
-    # Collections and databases are created when the first document is inserted into them.
-
     collections = {
-        'twitter_streaming': twitter_streaming,
+        # 'twitter_streaming': twitter_streaming,
         "twitter_sentiments": twitter_sentiments
     }
     return collections
 
 
+def insert_one_document(collection=None, document=None):
+    """This function inserts one document into the collection.
+
+    :param collection: collection name.
+    :type collection: pymongo.collection.Collection.
+    :param document: json document.
+    :type document: dict.
+    :return id: inserted document ObjectId or -1 if insertion failed.
+    :rtype id: ObjectId or int.
+
+    """
+    if collection is None or document is None:
+        return -1
+
+    try:
+        id = collection.insert_one(document).inserted_id
+    except:
+        return -1
+
+    return id
+
+
+def update_one_document(collection=None, query=None, doc=None):
+    """The function updates one document according to a certain query, and the entire content will be replace or added according to the field name.
+
+    :param collection: collection name.
+    :type collection: pymongo.collection.Collection.
+    :param query: json format, especially with object id Sample: ({"_id":id}).
+    :type query: dict.
+    :param doc: the fields need to be update to the original document Sample: ({"field_name":value}).
+    :return update_doc: updated count (should be one).
+    :rtype update_doc: int
+
+    """
+    update_doc = None
+    if collection is None:
+        return update_doc
+
+    if doc is None:
+        return update_doc
+
+    try:
+        update_doc = collection.find_one_and_update(query, {"$set": doc},
+                                                    return_document=pymongo.collection.ReturnDocument.AFTER)
+    except:
+        return update_doc

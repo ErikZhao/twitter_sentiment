@@ -36,8 +36,7 @@ class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         if status.coordinates:
             if self.num_tweets < stream_tweets_limit:
-                id = collections['twitter_streaming'].insert_one(
-                        {"text": status.text, "coordinates": status.coordinates['coordinates']}).inserted_id
+                id = m.insert_one_document(collections['twitter_sentiments'], {"text": status.text, "coordinates": status.coordinates['coordinates']})
                 self.ids.append(str(id))
                 self.num_tweets += 1
                 return True
