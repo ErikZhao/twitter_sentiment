@@ -117,3 +117,26 @@ def update_one_document(collection=None, query=None, doc=None):
                                                     return_document=pymongo.collection.ReturnDocument.AFTER)
     except:
         return update_doc
+
+
+def get_many_documents(collection=None, query=None):
+    """This function retrieves many documents with the same id under a certain query ({"field_name":value}).
+
+    :param collection: collection name.
+    :type collection: pymongo.collection.Collection.
+    :param query: json format, Sample: ({"field_name":value}).
+    :type query: dict.
+    :return documents: many documents found by this query.
+    :rtype documents: pymongo.command_cursor.CommandCursor.
+
+    """
+    if not collection or not query:
+        return None
+
+    try:
+        # find result by query and get the cursor object
+        documents = collection.find(query).limit(10000)
+    except:
+        return None
+
+    return documents

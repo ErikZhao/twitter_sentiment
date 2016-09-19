@@ -20,7 +20,7 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_token)
 auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
-stream_tweets_limit = 20
+stream_tweets_limit = 4000
 
 db = m.get_db()
 collections = m.get_collections(db)
@@ -37,7 +37,7 @@ class MyStreamListener(tweepy.StreamListener):
         # filter out tweets without geo and store others to twitter_sentiments collection
         if status.coordinates:
             if self.num_tweets < stream_tweets_limit:
-                id = m.insert_one_document(collections['twitter_sentiments'], {"text": status.text, "coordinates": status.coordinates['coordinates']})
+                id = m.insert_one_document(collections['twitter_sentiments'], {"text": status.text, "loc": {"type": "Point", "coordinates": status.coordinates['coordinates']}})
                 self.ids.append(str(id))
                 self.num_tweets += 1
                 return True
