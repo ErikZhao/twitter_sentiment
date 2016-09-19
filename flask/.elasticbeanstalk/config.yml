@@ -1,0 +1,10 @@
+branch-defaults:
+  master:
+    environment: banjo-erik-dev
+global:
+  application_name: banjo_erik
+  default_ec2_keyname: null
+  default_platform: 64bit Amazon Linux 2016.03 v2.1.6 running Python 2.7
+  default_region: us-west-1
+  profile: eb-cli
+  sc: git
